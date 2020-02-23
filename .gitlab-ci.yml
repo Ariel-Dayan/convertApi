@@ -1,0 +1,40 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+stages:
+    - build 
+    - release
+    - deploy
+
+variables: 
+  IMAGE: registry.gitlab.com/yesodot/selenium/blueaiteam/convert-api
+
+cache:
+  paths:
+   - node_modules/
+  
+release_image:
+  stage: release
+  image: docker:latest 
+  script:
+    - docker login -u shragauser -p 1234123121Kidon registry.gitlab.com
+    - docker pull $IMAGE:current || true
+    - docker build --cache-from $IMAGE:current --tag $IMAGE:current .
+    - docker push $IMAGE:current
+  only:
+    - master
+
+deploy_image:
+  stage: deploy
+  image: docker:latest 
+  script:
+    - docker login -u shragauser -p 1234123121Kidon registry.gitlab.com
+    - docker pull $IMAGE:current || true
+    - docker build --cache-from $IMAGE:current --tag $IMAGE:latest .
+    - docker tag $IMAGE:latest $IMAGE:current
+    - docker push $IMAGE:current
+    - docker push $IMAGE:latest
+  only:
+    - tags
