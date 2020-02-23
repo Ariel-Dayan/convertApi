@@ -25,65 +25,65 @@ services:
     volumes:
       - 'esdata1:/usr/share/elasticsearch/data'
       - 'mongo-data-volume:/data/db'
-  # keep-alive-service:
-  #     image: kaser:latest
-  #     environment: 
-  #       SERVICE_PORT: 5001
-  #       SERVICE_NAME: keep-alive
-  #       DB_SERVERS: mongo:27017
-  #       KEEP_ALIVE_DB_NAME: keepAlive
-  #       # DB_REPLICA_NAME: dropbox
-  #       DB_REPLICA_NAME: rs0
-  #       # RMQ_HOST: rabbitmq
-  #       # RMQ_PORT: 5672
-  #       # RMQ_PASSWORD: guest1
-  #       # RMQ_USERNAME: guest1
-  #       # RMQ_EXCHANGE: kaser-exchange
-  #       # RMQ_EXCHANGE_TYPE: topic
-  #       # RMQ_QUEUE_NAME: alive-signal-queue
-  #       # RMQ_PATTERN: '#.aliveSignal'
-  #       # RMQ_ACTIVE: 0
-  #       ALIVE_SIGNAL_EXPIRATION_TIME: 86400
-  #       HOST_SERVICE_EXPIRATION_TIME: 86400
-  #       SERVICE_MAX_SILENCE_TIME: 60
-  #     depends_on: 
-  #       - mongo
-  #       - mongo-replica-init
-  #     ports:
-  #       - 5001:5001
+  keep-alive-service:
+      image: almogvc/kaser:latest
+      environment: 
+        SERVICE_PORT: 5001
+        SERVICE_NAME: keep-alive
+        DB_SERVERS: mongo:27017
+        KEEP_ALIVE_DB_NAME: keepAlive
+        DB_REPLICA_NAME: dropbox
+        DB_REPLICA_NAME: rs0
+        RMQ_HOST: rabbitmq
+        RMQ_PORT: 5672
+        RMQ_PASSWORD: guest1
+        RMQ_USERNAME: guest1
+        RMQ_EXCHANGE: kaser-exchange
+        RMQ_EXCHANGE_TYPE: topic
+        RMQ_QUEUE_NAME: alive-signal-queue
+        RMQ_PATTERN: '#.aliveSignal'
+        RMQ_ACTIVE: 0
+        ALIVE_SIGNAL_EXPIRATION_TIME: 86400
+        HOST_SERVICE_EXPIRATION_TIME: 86400
+        SERVICE_MAX_SILENCE_TIME: 60
+      depends_on: 
+        - mongo
+        - mongo-replica-init
+      ports:
+        - 5001:5001
 
-  # mongo-replica-init:
-  #   image: registry.gitlab.com/yesodot/shared-projects/dropbox/mongo-replica-init
-  #   deploy:
-  #     restart_policy:
-  #       condition: on-failure
-  #   depends_on: 
-  #     - mongo
-  #   environment: 
-  #     host: mongo
-  # mongo:
-  #   image: mongo:latest
-  #   ports:
-  #     - '27017:27017'
-  #   command: "--bind_ip_all --replSet rs0"
-  # apm:
-  #   image: 'docker.elastic.co/apm/apm-server:6.3.2'
-  #   container_name: apm
-  #   environment:
-  #     - 'ES_HOSTS=http://elasticsearch:9200'
-  #   ports:
-  #     - '8200:8200'
-  #   depends_on:
-  #     - elasticsearch
+  mongo-replica-init:
+    image: registry.gitlab.com/yesodot/shared-projects/dropbox/mongo-replica-init
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on: 
+      - mongo
+    environment: 
+      host: mongo
+  mongo:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    command: "--bind_ip_all --replSet rs0"
+  apm:
+    image: 'docker.elastic.co/apm/apm-server:6.3.2'
+    container_name: apm
+    environment:
+      - 'ES_HOSTS=http://elasticsearch:9200'
+    ports:
+      - '8200:8200'
+    depends_on:
+      - elasticsearch
   convert-service:
     depends_on:
-      # - apm
-      # - keep-alive-service
+      - apm
+      - keep-alive-service
       - logger-service
-    image: convert-api
-    build:
-      context: registry.gitlab.com/yesodot/selenium/blueaiteam/convert-api
-      dockerfile: Dockerfile
+    image: registry.gitlab.com/yesodot/selenium/blueaiteam/convert-api
+    # build:
+    #   context:
+    #   dockerfile: Dockerfile
     environment:
       JPEG_QUALITY: 80,
       LOGGER_URL: localhost:9200
@@ -96,7 +96,7 @@ services:
       USE_KASERS_CONFIG: 'true'
       APM_ACTIVE: 'true'
       APM_SERVER: apm:8200
-      # NODE_ENV: production
+      NODE_ENV: production
     ports:
       - 8000:8000
 volumes:
