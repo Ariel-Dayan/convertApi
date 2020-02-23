@@ -75,30 +75,30 @@ services:
   #     - '8200:8200'
   #   depends_on:
   #     - elasticsearch
-  # convert-service:
-  #   depends_on:
-  #     - apm
-  #     - keep-alive-service
-  #     - logger-service
-  #   image: convert-api
-  #   build:
-  #     context: ../
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     JPEG_QUALITY: 80,
-  #     LOGGER_URL: localhost:9200
-  #     SERVICE_NAME: convert-api
-  #     KASER_INTERVAL: 60
-  #     KASER_INTERVAL_MARGIN: 5
-  #     KASER_USE_HTTP: 'true'
-  #     KASER_HOST: keep-alive-service
-  #     KASER_PORT: 5001
-  #     USE_KASERS_CONFIG: 'true'
-  #     APM_ACTIVE: 'true'
-  #     APM_SERVER: apm:8200
-  #     # NODE_ENV: production
-  #   ports:
-  #     - 8000:8000
+  convert-service:
+    depends_on:
+      # - apm
+      # - keep-alive-service
+      - logger-service
+    image: convert-api
+    build:
+      context: registry.gitlab.com/yesodot/selenium/blueaiteam/convert-api
+      dockerfile: Dockerfile
+    environment:
+      JPEG_QUALITY: 80,
+      LOGGER_URL: localhost:9200
+      SERVICE_NAME: convert-api
+      KASER_INTERVAL: 60
+      KASER_INTERVAL_MARGIN: 5
+      KASER_USE_HTTP: 'true'
+      KASER_HOST: keep-alive-service
+      KASER_PORT: 5001
+      USE_KASERS_CONFIG: 'true'
+      APM_ACTIVE: 'true'
+      APM_SERVER: apm:8200
+      # NODE_ENV: production
+    ports:
+      - 8000:8000
 volumes:
   mongo-data-volume:
   esdata1:
