@@ -1,5 +1,5 @@
 module.exports = {
-    JPEG_QUALITY: Number(process.env.JPEG_QUALITY || '80'),
+    JPEG_QUALITY: Number(process.env.JPEG_QUALITY || '85'),
     LOGGER_INFO: {
         LOGGER_URL: process.env.LOGGER_URL || 'localhost:9200', 
     },

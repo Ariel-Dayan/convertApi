@@ -32,7 +32,6 @@ services:
         SERVICE_PORT: 5001
         SERVICE_NAME: keep-alive
         MONGO_CONNECTION_STRING: mongodb://mongo:27017/keepAlive
-        # DB_REPLICA_NAME: rs0
         RMQ_HOST: rabbitmq
         RMQ_PORT: 5672
         RMQ_PASSWORD: guest1
