@@ -80,10 +80,10 @@ services:
       - apm
       - keep-alive-service
       - logger-service
-    image: registry.gitlab.com/yesodot/selenium/blueaiteam/convert-api
-    # build:
-    #   context:
-    #   dockerfile: Dockerfile
+    image: convert-api
+    build:
+      context: ../
+      dockerfile: Dockerfile
     environment:
       JPEG_QUALITY: 80,
       LOGGER_URL: localhost:9200
