@@ -1,8 +1,6 @@
-const path = require('path');
 const { PassThrough } = require('stream');
 const multer = require('multer');
 
-const logger = require('../../utils/logger');
 const { applyValidationMiddleware } = require("./validationMiddleware");
 const actions = require('../../logicHandler/actions/index.js');
 
@@ -18,11 +16,12 @@ const convertFile = async (req, res, next) => {
         readStream.pipe(res.status(200));
 
     } catch(err) {
-        logger.error(err);
+        console.error(err);
         res.status(500).send(err)
     }
 
 };
+
 const applyRouteMiddleware = app => {
     app.get('/', 
             multer({ storage: multer.memoryStorage() }).single('file'), 

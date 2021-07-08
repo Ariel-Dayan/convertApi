@@ -1,7 +1,6 @@
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 
@@ -23,7 +22,6 @@ const applyGenericMiddleware = app => {
             extended: true
         })
     );
-    app.use(cookieParser());
 }
 
 module.exports = { applyGenericMiddleware };
